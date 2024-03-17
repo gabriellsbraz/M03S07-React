@@ -1,13 +1,34 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { FormEvent, useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const SigninPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const { login } = useAuth();
+
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      if (
+        (username || username.length > 0) &&
+        (password || password.length > 0)
+      ) {
+        const userData = { username: username, password: password };
+        login(userData);
+        Navigate("/home");
+      } else {
+        alert("Usuário ou senha inválido.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div>
-      <form>
+      <form onSubmit={handleSubmit}>
         <h1 className="">Signin</h1>
         <div className="w-150">
           <input
